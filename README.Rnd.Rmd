@@ -1,4 +1,0 @@
-The course is really nice. I am working to learn more about R programming. 
-I followed the provided instructions to get started with GitHub; created a Github account and downloaded Github desktop. I also got the course project template 'IODS-project'. I opened the file chapter1.Rmd with RStudio wrote about the course. I also provided a link to my GitHub repository.Next I opened the index.Rmd file with RStudio and I added ???author: Eric Coles??? to the file. I then proceeded to knit the document as a html page.Then I created a new Rmarkdown file with RStudio, deleted everything in the file and wrote about the course. I also provided a link to my course diary. The file was saved as ???README.Rmd??? Then I uploaded the changes to GitHub
-Here is a link to my course diary! 
-https://ericcoles.github.io/IODS-project/

@@ -1,0 +1,3 @@
+The course, Introduction to Open Data Science, is really nice. I am working to learn more about R programming. The course aims to teach students how to use R, RStudio, RMarkdown and GitHub as well as to teach statistical methods of data science. 
+Here is a link to my course diary! 
+https://ericcoles.github.io/IODS-project/
