@@ -3,6 +3,15 @@
 
 *Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*
 
-sdfshdfkgdfgdfgdfg
+The three main themes of this course are; Open Data, Open Science, and Data Science. 
+Open Data allows for the sharing of data between researchers in all fields. The course will teach how to use open data sets from various sources and how to analyse them in different ways as well as how to intepret the data.
+
+Open Science allows for researchers to show and have their data reproduced by others using the same openly available software tools and methods. This course will teach students how to use these openly available software tools and methods.
+
+Data Science falls into the realm of statistics. This course involves coding, programming, modeling, visualizing and analysing.
+
+I am very excited to learn R Progamming and be guided through these themes of Open Data, Open Science, and Data Science :)
+
+https://github.com/Ericcoles/IODS-project
 
 Edited test
