@@ -1,3 +1,4 @@
+## Chapter 1
 The three main themes of this course are; Open Data, Open Science, and Data Science. 
 Open Data allows for the sharing of data between researchers in all fields. The course will teach how to use open data sets from various sources and how to analyse them in different ways as well as how to intepret the data.
 
