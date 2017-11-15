@@ -13,9 +13,7 @@ dim(learning2014)
 
 # Installed the packages ggplot2 and GGally in Rstudio
 ```{r}
-install.packages("ggplot2")
 library(ggplot2)
-install.packages("GGally")
 library(GGally)
 ```
 
@@ -43,8 +41,8 @@ summary(regression_model)
 ```{r}
 regression_model_fit <- lm(points ~ Attitude, data = learning2014)
 summary(regression_model_fit)
-Both "stra" and "age" did not have a statistically significant relationship with the dependent variable, and in this model they were removed.
 ```
+Both 'stra' and 'age' did not have a statistically significant relationship with the dependent variable, and in this model they were removed.
 
 The Attitude variable had a high t-value of 6.214 and a significant p-value of 4.12e-09.
 
@@ -56,8 +54,8 @@ R-squared does not indicate if a regression model provides an adequate fit to yo
 
 
 # 5.Graphical model validation
-```{r}
 Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
+```{r}
 par(mfrow = c(2,2))
 plot(regression_model_fit, which = c(1, 2, 5))
 ```
@@ -74,10 +72,10 @@ Three of the residuals(145,56,35) "stands out" from the basic random pattern of 
 
 ## The Normal Q-Q Plot
 
-The quantile-quantile (q-q) plot is a graphical technique for determining if two data sets come from populations with a common distribution. A q-q plot is a plot of the quantiles of the first data set against the quantiles of the second data set.
+The quantile quantile (qq) plot is a graphical technique for determining if two data sets come from populations with a common distribution. A q-q plot is a plot of the quantiles of the first data set against the quantiles of the second data set.
 
-These 2 batches do appear to have come from populations with a common distribution as the majority of the values fall on the same line. This also contains outliers (145,56,35)
+These two batches do appear to have come from populations with a common distribution as the majority of the values fall on the same line. This also contains outliers (145,56,35)
 
 ## The Residuals vs. Leverage Plot
 
-Outliers: an outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.04, suggesting that this a good model.
+An outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.04, suggesting that this a good model.
