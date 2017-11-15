@@ -64,7 +64,9 @@ male_students <- filter(learning2014, gender == "M")
 # select rows where Points is greater than zero
 learning2014 <- filter(learning2014, points > 0)
 
-write.csv(learning2014, file = "Learning2014.csv", row.names = FALSE) 
+> setwd("~/Documents/GitHub/IODS-project/data")
+
+write.csv(learning2014, file = "learning2014.csv", row.names = FALSE) 
 # read the data and check for the validity
 learning2014<- read.csv(file="learning2014.csv")
 
