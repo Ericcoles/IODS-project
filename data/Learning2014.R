@@ -1,11 +1,15 @@
-#Eric Coles
-#Nov 14, 2017
-#new script
+# Eric Coles
+# Nov 14, 2017
+# Data wrangling
 
+# read the dataset
 lrning2014 <-read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
 
 #explore the structure
 str(lrning2014)
+
+# explore the dimension of the data
+dim(lrning2014)
 
 #data.frame has 183 obs. of  60 variables. Contains both integers and factors.
 
@@ -64,7 +68,9 @@ male_students <- filter(learning2014, gender == "M")
 # select rows where Points is greater than zero
 learning2014 <- filter(learning2014, points > 0)
 
-> setwd("~/Documents/GitHub/IODS-project/data")
+
+# set the working directory to data folder in IODS-project
+# setwd("~/Documents/GitHub/IODS-project/data")
 
 write.csv(learning2014, file = "learning2014.csv", row.names = FALSE) 
 # read the data and check for the validity
