@@ -71,6 +71,6 @@ learning2014<- read.csv(file="learning2014.csv")
 
 
 # check the dataset
-str(learning2014_selected_check)
-head(learning2014_selected_check)
+str(learning2014)
+head(learning2014)
 
