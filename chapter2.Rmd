@@ -4,21 +4,27 @@
 # 1. Reading and checking the data
 
 Dataset with the variables gender, age, attitude, deep, stra, surf and points created by combining questions in the learning2014 data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables) 
+```{r}
 learning2014<- read.csv("/Users/eric/Documents/GitHub/IODS-project/data/learning2014.csv")
 str(learning2014)
 dim(learning2014)
+```
 
 
 # Installed the packages ggplot2 and GGally in Rstudio
+```{r}
 install.packages("ggplot2","GGally")
 library(ggplot2)
 library(GGally)
 install.packages("GGally")
 library(GGally)
+```
 
 # 2.Graphical overview of the data and summaries of the variables in the data.
+```{r}
 p1 <- ggpairs(learning2014, mapping = aes(col=gender,alpha=0.3), lower=list(combo = wrap("facethist", bins = 20)))
 p1
+```
 
 Genders are shown in Blue(males) and Pink(females). One can see cleary that points and Attitude has the highest correlation values in both males and females.This suggests that one's attidude could effect the points one receives. The lowest correlation values for women are seen in Attitude and age,0.00756, suggesting that attitude and age do not have a relationship among women in the study sample. However men had a much higher correlation value in Attiude and age,0.0415, suggesting that there is more of a relationship between Attitude and age among men than in women in the study sample.
 
@@ -26,17 +32,20 @@ Genders are shown in Blue(males) and Pink(females). One can see cleary that poin
 
 Here I chose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Showing a summary of the fitted model, commenting and interpreting the results. As well as explaining and interpreting the statistical test related to the model parameters. 
 
+```{r}
 regression_model <- lm(points ~ Attitude + stra + age, data = learning2014)
 summary(regression_model)
+```
 
 "Attitude", "stra", and "age" are the independent variables in the regression model and the variable points is the dependent variable. From the t value as well as the p-value Pr, it shows that the variables "stra" and "age" are not statistically significant. However, it is shown from the data analysis that the relationship between "points" and "Attitude" is significant from the P-value of 4.72e-09 and a high t-value of 6.191.
 
 
 # 4.Fitted Regression Model
-
+```{r}
 regression_model_fit <- lm(points ~ Attitude, data = learning2014)
 summary(regression_model_fit)
 Both "stra" and "age" did not have a statistically significant relationship with the dependent variable, and in this model they were removed.
+```
 
 The Attitude variable had a high t-value of 6.214 and a significant p-value of 4.12e-09.
 
@@ -48,10 +57,11 @@ R-squared does not indicate if a regression model provides an adequate fit to yo
 
 
 # 5.Graphical model validation
-
+```{r}
 Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
 par(mfrow = c(2,2))
 plot(regression_model_fit, which = c(1, 2, 5))
+```
 
 ## The Residuals vs. Fitted plot
 
