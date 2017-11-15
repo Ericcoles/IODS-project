@@ -3,7 +3,7 @@
 
 # 1. Reading and checking the data
 
-Dataset with the variables gender, age, attitude, deep, stra, surf and points created by combining questions in the learning2014 data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables) 
+Dataset with the variables **gender**, age, attitude, deep, stra, surf and points created by combining questions in the learning2014 data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables.
 ```{r}
 learning2014<- read.csv("/Users/eric/Documents/GitHub/IODS-project/data/learning2014.csv")
 str(learning2014)
@@ -15,8 +15,6 @@ dim(learning2014)
 ```{r}
 install.packages("ggplot2","GGally")
 library(ggplot2)
-library(GGally)
-install.packages("GGally")
 library(GGally)
 ```
 
