@@ -3,7 +3,7 @@
 
 # 1. Reading and checking the data
 
-Dataset with the variables `gender`, age, attitude, deep, stra, surf and points created by combining questions in the learning2014 data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables.
+Dataset with the variables `gender`, `age`, attitude`, `deep`, `stra`, `surf` and points created by combining questions in the `learning2014` data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables.
 ```{r}
 learning2014<- read.csv("/Users/eric/Documents/GitHub/IODS-project/data/learning2014.csv")
 str(learning2014)
@@ -35,7 +35,7 @@ regression_model <- lm(points ~ Attitude + stra + age, data = learning2014)
 summary(regression_model)
 ```
 
-"Attitude", "stra", and "age" are the independent variables in the regression model and the variable points is the dependent variable. From the t value as well as the p-value Pr, it shows that the variables "stra" and "age" are not statistically significant. However, it is shown from the data analysis that the relationship between "points" and "Attitude" is significant from the P-value of 4.72e-09 and a high t-value of 6.191.
+`Attitude`, `stra`, and `age` are the independent variables in the regression model and the variable points is the dependent variable. From the t value as well as the p-value Pr, it shows that the variables `stra` and `age` are not statistically significant. However, it is shown from the data analysis that the relationship between `points` and `Attitude` is significant from the P-value of 4.72e-09 and a high t-value of 6.191.
 
 
 # 4.Fitted Regression Model
