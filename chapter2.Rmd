@@ -1,12 +1,8 @@
 # Insert chapter 2 title here
 
-*Describe the work you have done this week and summarize your learning.*
-
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
 
 #1. Reading and checking the data
+
 #Dataset with the variables gender, age, attitude, deep, stra, surf and points created by combining questions in the learning2014 data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables) 
 learning2014<- read.csv("/Users/eric/Documents/GitHub/IODS-project/data/learning2014.csv")
 str(learning2014)
@@ -27,6 +23,7 @@ p1
 #Genders are shown in Blue(males) and Pink(females). One can see cleary that points and Attitude has the highest correlation values in both males and females.This suggests that one's attidude could effect the points one receives. The lowest correlation values for women are seen in Attitude and age,0.00756, suggesting that attitude and age do not have a relationship among women in the study sample. However men had a much higher correlation value in Attiude and age,0.0415, suggesting that there is more of a relationship between Attitude and age among men than in women in the study sample.
 
 #3. Regression Model
+
 #Here I chose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Showing a summary of the fitted model, commenting and interpreting the results. As well as explaining and interpreting the statistical test related to the model parameters. 
 
 regression_model <- lm(points ~ Attitude + stra + age, data = learning2014)
@@ -36,6 +33,7 @@ summary(regression_model)
 
 
 #4.Fitted Regression Model
+
 regression_model_fit <- lm(points ~ Attitude, data = learning2014)
 summary(regression_model_fit)
 #Both "stra" and "age" did not have a statistically significant relationship with the dependent variable, and in this model they were removed.
@@ -50,11 +48,13 @@ summary(regression_model_fit)
 
 
 #5.Graphical model validation
+
 #Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
 par(mfrow = c(2,2))
 plot(regression_model_fit, which = c(1, 2, 5))
 
 #The Residuals vs. Fitted plot
+
 #It is a scatter plot of residuals on the y axis and fitted values (estimated responses) on the x axis. The plot is used to detect non-linearity, unequal error variances, and outliers.
 
 #The residuals "bounce randomly" around the 0 line. This suggests that the assumption that the relationship is linear is reasonable.
@@ -64,9 +64,11 @@ plot(regression_model_fit, which = c(1, 2, 5))
 #Three of the residuals(145,56,35) "stands out" from the basic random pattern of residuals. This suggests that there are outliers.
 
 #The Normal Q-Q Plot
+
 #The quantile-quantile (q-q) plot is a graphical technique for determining if two data sets come from populations with a common distribution. A q-q plot is a plot of the quantiles of the first data set against the quantiles of the second data set.
 
 #These 2 batches do appear to have come from populations with a common distribution as the majority of the values fall on the same line. This also contains outliers (145,56,35)
 
 #The Residuals vs. Leverage Plot
+
 #Outliers: an outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.04, suggesting that this a good model.
