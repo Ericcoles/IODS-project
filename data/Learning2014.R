@@ -77,7 +77,6 @@ write.csv(learning2014, file = "learning2014.csv", row.names = FALSE)
 learning2014<- read.csv(file="learning2014.csv")
 
 
-
 # check the dataset
 str(learning2014)
 head(learning2014)

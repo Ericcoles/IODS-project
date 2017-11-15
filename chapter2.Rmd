@@ -13,8 +13,9 @@ dim(learning2014)
 
 # Installed the packages ggplot2 and GGally in Rstudio
 ```{r}
-install.packages("ggplot2","GGally")
+install.packages("ggplot2")
 library(ggplot2)
+install.packages("GGally")
 library(GGally)
 ```
 
