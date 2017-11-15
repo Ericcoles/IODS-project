@@ -43,8 +43,12 @@ summary(regression_model_fit)
 #The Attitude variable had a high t-value of 6.214 and a significant p-value of 4.12e-09.
 
 #From the data it is shown that the Multiple R-squared is 0.1906 and the	Adjusted R-squared value is 0.1856. 
+
 #R-squared cannot be used to determine whether the coefficient estimates and predictions are biased, which is why you must assess the residual plots. [Reference](http://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+
 #R-squared does not indicate if a regression model provides an adequate fit to your data. A good model can have a low R2 value. On the other hand, a biased model can have a high R2 value.[Reference](http://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+
+
 #5.Graphical model validation
 #Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
 par(mfrow = c(2,2))
@@ -52,11 +56,17 @@ plot(regression_model_fit, which = c(1, 2, 5))
 
 #The Residuals vs. Fitted plot
 #It is a scatter plot of residuals on the y axis and fitted values (estimated responses) on the x axis. The plot is used to detect non-linearity, unequal error variances, and outliers.
+
 #The residuals "bounce randomly" around the 0 line. This suggests that the assumption that the relationship is linear is reasonable.
+
 #The residuals roughly form a "horizontal band" around the 0 line. This suggests that the variances of the error terms are equal.
+
 #Three of the residuals(145,56,35) "stands out" from the basic random pattern of residuals. This suggests that there are outliers.
+
 #The Normal Q-Q Plot
 #The quantile-quantile (q-q) plot is a graphical technique for determining if two data sets come from populations with a common distribution. A q-q plot is a plot of the quantiles of the first data set against the quantiles of the second data set.
+
 #These 2 batches do appear to have come from populations with a common distribution as the majority of the values fall on the same line. This also contains outliers (145,56,35)
+
 #The Residuals vs. Leverage Plot
 #Outliers: an outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.04, suggesting that this a good model.
