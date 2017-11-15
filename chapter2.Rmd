@@ -1,4 +1,4 @@
-# Insert chapter 2 title here
+# 2. Regression and model validation
 
 
 # 1. Reading and checking the data
