@@ -5,3 +5,58 @@
 - Describe your work and results clearly. 
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+
+#1. Reading and checking the data
+#Dataset with the variables gender, age, attitude, deep, stra, surf and points created by combining questions in the learning2014 data, as defined in the datacamp exercises. Scaled all combination variables to the original scales by taking the mean. Excluded observations where the exam points variable is zero. The dataset has 166 observations and 7 variables) 
+learning2014<- read.csv("/Users/eric/Documents/GitHub/IODS-project/data/learning2014.csv")
+str(learning2014)
+dim(learning2014)
+
+
+#Installed the packages ggplot2 and GGally in Rstudio
+install.packages("ggplot2","GGally")
+library(ggplot2)
+library(GGally)
+install.packages("GGally")
+library(GGally)
+
+#2.Graphical overview of the data and summaries of the variables in the data.
+p1 <- ggpairs(learning2014, mapping = aes(col=gender,alpha=0.3), lower=list(combo = wrap("facethist", bins = 20)))
+p1
+
+#Genders are shown in Blue(males) and Pink(females). One can see cleary that points and Attitude has the highest correlation values in both males and females.This suggests that one's attidude could effect the points one receives. The lowest correlation values for women are seen in Attitude and age,0.00756, suggesting that attitude and age do not have a relationship among women in the study sample. However men had a much higher correlation value in Attiude and age,0.0415, suggesting that there is more of a relationship between Attitude and age among men than in women in the study sample.
+
+#3. Regression Model
+#Here I chose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Showing a summary of the fitted model, commenting and interpreting the results. As well as explaining and interpreting the statistical test related to the model parameters. 
+
+regression_model <- lm(points ~ Attitude + stra + age, data = learning2014)
+summary(regression_model)
+
+#"Attitude", "stra", and "age" are the independent variables in the regression model and the variable points is the dependent variable. From the t value as well as the p-value Pr, it shows that the variables "stra" and "age" are not statistically significant. However, it is shown from the data analysis that the relationship between "points" and "Attitude" is significant from the P-value of 4.72e-09 and a high t-value of 6.191.
+
+
+#4.Fitted Regression Model
+regression_model_fit <- lm(points ~ Attitude, data = learning2014)
+summary(regression_model_fit)
+#Both "stra" and "age" did not have a statistically significant relationship with the dependent variable, and in this model they were removed.
+
+#The Attitude variable had a high t-value of 6.214 and a significant p-value of 4.12e-09.
+
+#From the data it is shown that the Multiple R-squared is 0.1906 and the	Adjusted R-squared value is 0.1856. 
+#R-squared cannot be used to determine whether the coefficient estimates and predictions are biased, which is why you must assess the residual plots. [Reference](http://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+#R-squared does not indicate if a regression model provides an adequate fit to your data. A good model can have a low R2 value. On the other hand, a biased model can have a high R2 value.[Reference](http://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+#5.Graphical model validation
+#Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage.
+par(mfrow = c(2,2))
+plot(regression_model_fit, which = c(1, 2, 5))
+
+#The Residuals vs. Fitted plot
+#It is a scatter plot of residuals on the y axis and fitted values (estimated responses) on the x axis. The plot is used to detect non-linearity, unequal error variances, and outliers.
+#The residuals "bounce randomly" around the 0 line. This suggests that the assumption that the relationship is linear is reasonable.
+#The residuals roughly form a "horizontal band" around the 0 line. This suggests that the variances of the error terms are equal.
+#Three of the residuals(145,56,35) "stands out" from the basic random pattern of residuals. This suggests that there are outliers.
+#The Normal Q-Q Plot
+#The quantile-quantile (q-q) plot is a graphical technique for determining if two data sets come from populations with a common distribution. A q-q plot is a plot of the quantiles of the first data set against the quantiles of the second data set.
+#These 2 batches do appear to have come from populations with a common distribution as the majority of the values fall on the same line. This also contains outliers (145,56,35)
+#The Residuals vs. Leverage Plot
+#Outliers: an outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.04, suggesting that this a good model.
