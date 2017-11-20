@@ -80,20 +80,10 @@ library(dplyr); library(ggplot2)
 # define a new column alc_use by combining weekday and weekend alcohol use
 alc <- mutate(alc, alc_use = (Dalc + Walc) / 2)
 
-# initialize a plot of alcohol use
-g1 <- ggplot(data = alc, aes(x = alc_use, fill = sex))
-
-# define the plot as a bar plot and draw it
-g1 + geom_bar()
 
 # define a new logical column 'high_use'
 alc <- mutate(alc, high_use = alc_use > 2)
 
-# initialize a plot of 'high_use'
-g2 <- ggplot(alc, aes(high_use))
-
-# draw a bar plot of high_use by sex
-g2 + facet_wrap("sex") + geom_bar()
 
 glimpse(alc)
 
