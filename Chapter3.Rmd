@@ -3,26 +3,67 @@ title: "Chapter3"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+library(GGally)
+library(ggplot2)
+library(tidyr); 
 
-## R Markdown
+url<-"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt"
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+colnames(alc)
+str(alc)
+dim(alc)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
+#I have chosen internet, traveltime, age and freetime I predict that internet use increases alcohol consumpiton. I predict that traveltime has no correlation. I predict that age is related to alchohol consumption as well as the amount of ones freetime.
 
-## Including Plots
 
-You can also embed plots, for example:
+summary(alc$studytime)
+summary(alc$traveltime)
+summary(alc$age)
+summary(alc$freetime)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+alc_data <- select(alc,c("high_use","studytime","traveltime","age","freetime"))
+gather(alc_data) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+
+p<-ggpairs(alc_data)
+p
+
+m <- glm(high_use ~ high_use + studytime + traveltime + age + freetime, data = alc_data, family = "binomial")
+summary(m)
+coef(m)
+
+OR <- coef(m) %>% exp
+CI <- confint(m) %>% exp
+cbind(OR, CI)
+
+
+# predict() the probability of high_use
+probabilities <- predict(m, type = "response")
+
+# add the predicted probabilities to 'alc'
+alc_data <- mutate(alc_data, probability = probabilities)
+
+# use the probabilities to make a prediction of high_use
+alc_data <- mutate(alc_data, prediction = probability > 0.5)
+
+# see the last ten original classes, predicted probabilities, and class predictions
+select(alc_data, high_use, studytime, traveltime, age, freetime) %>% tail(10)
+
+table(high_use = alc_data$high_use, prediction = alc_data$prediction)
+
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+loss_func(class = alc_data$high_use, prob = alc_data$probability)
+
+library.tidyr
+
+library(boot)
+cv <- cv.glm(data=alc_data, cost=loss_func, glmfit=m, K=10)
+cv$delta[1]
+
+datacamp had [1] 0.2539267 as cv value.
