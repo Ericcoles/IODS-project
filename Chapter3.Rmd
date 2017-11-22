@@ -1,58 +1,79 @@
----
-title: "Chapter3"
-output: html_document
----
 
+## "Chapter3"
+
+```{r}
 library(GGally)
 library(ggplot2)
 library(tidyr); 
+```
 
+```{r}
 url<-"http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt"
+```
 
+```{r}
 colnames(alc)
 str(alc)
 dim(alc)
-
+```
 
 #I have chosen internet, traveltime, age and freetime I predict that internet use increases alcohol consumpiton. I predict that traveltime has no correlation. I predict that age is related to alchohol consumption as well as the amount of ones freetime.
 
-
+```{r}
 summary(alc$studytime)
 summary(alc$traveltime)
 summary(alc$age)
 summary(alc$freetime)
+```
 
 
-
-
+```{r}
 alc_data <- select(alc,c("high_use","studytime","traveltime","age","freetime"))
 gather(alc_data) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+```
 
+```{r}
 p<-ggpairs(alc_data)
 p
+```
 
+
+```{r}
 m <- glm(high_use ~ high_use + studytime + traveltime + age + freetime, data = alc_data, family = "binomial")
 summary(m)
 coef(m)
+```
 
+
+```{r}
 OR <- coef(m) %>% exp
 CI <- confint(m) %>% exp
 cbind(OR, CI)
-
+```
 
 # predict() the probability of high_use
+```{r}
 probabilities <- predict(m, type = "response")
+```
 
 # add the predicted probabilities to 'alc'
+```{r}
 alc_data <- mutate(alc_data, probability = probabilities)
+```
 
 # use the probabilities to make a prediction of high_use
+```{r}
 alc_data <- mutate(alc_data, prediction = probability > 0.5)
+```
 
 # see the last ten original classes, predicted probabilities, and class predictions
+```{r}
 select(alc_data, high_use, studytime, traveltime, age, freetime) %>% tail(10)
+```
 
+```{r}
 table(high_use = alc_data$high_use, prediction = alc_data$prediction)
+```
 
 loss_func <- function(class, prob) {
   n_wrong <- abs(class - prob) > 0.5
