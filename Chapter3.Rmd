@@ -18,86 +18,89 @@ The data set focuses on student achievement in secondary education of two portug
 
 Printed out the names of the variables in the data, explored their sturcture and dim.
 
-colnames(alc)
+```{r}
+colnames(alc) 
 str(alc)
 dim(alc)
+```
 
 I have chosen studytime, traveltime, age and freetime. I predict that traveltime  increases alcohol consumpiton. I predict that studytime has a negative correlation with high_use alcohol consumption. I predict that age is related to alchohol consumption as well as freetime.
 
 The variable "studytime" is numeric, the variable "traveltime" is numeric, the variable "age" is an integer, and the variable "freetime" is numeric.
 
-
+```{r}
 summary(alc$studytime)
 summary(alc$traveltime)
 summary(alc$age)
 summary(alc$freetime)
-
+```
 Minimum value of studytime is 1.0, mean 2.037 and max 4.0.
 Minimum value of traveltime is 1.0, mean 1.448 and max 4.0.
 Minimum value of age is 15, mean 16.59 and max 22.0.
 Minimum value of freetime is 1.0, mean 3.22 and max 4.0.
 
 I graphically explored the varabiles;"high_use","studytime","traveltime","age","freetime"
-
+```{r}
 alc_data <- select(alc,c("high_use","studytime","traveltime","age","freetime"))
 gather(alc_data) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
-
+```
 
 I created several scattered plots using the variables;"high_use","studytime","traveltime","age","freetime".
-
+```{r}
 p<-ggpairs(alc_data)
 p
-
+```
 From the scatter plots, one can see that there is a postive correlation between the target variable "high_use" and the independent variables "traveltime","age", and "freetime" and that there is a negative correlation between "studytime" and "high_use".
 
 
 I defined a regression model with the variables "high_use","studytime","traveltime","age","freetime". 
-
+```{r}
 m <- glm(high_use ~ high_use + studytime + traveltime + age + freetime, data = alc_data, family = "binomial")
 summary(m)
 coef(m)
-
+```
 All of the variables were significant. "studytime" had a p-value of 0.000639, "traveltime" had a p-value of 0.35353, "age" had a p-value of 0.044513, and "freetime" had a p-value 0.011030
 
 I obtain the odds ratios and their confidence intervals by taking the exponential function:
-
+```{r}
 OR <- coef(m) %>% exp
 CI <- confint(m) %>% exp
 cbind(OR, CI)
-
+```
                              
 The odds of high_use alcohol is less than 50% with study_time in study population effect between 42% and 79%, supporting my intitial hypothesis.
 The odds ratio for traveltime, age, and freetime are greater than one suggesting that there is an relationship between high_use alcohol and these variables however the confidence interval 95%(97.5%-2.5%) crosses 1, implying there is no relationship between these variables and high_use alcohol. These results suggest I should reject my intitial hypothesis for traveltime, age, and freetime.
 
 predict() the probability of high_use
-
+```{r}
 probabilities <- predict(m, type = "response")
-
+```
 
 add the predicted probabilities to 'alc'
-
+```{r}
 alc_data <- mutate(alc_data, probability = probabilities)
-
+```
 
 use the probabilities to make a prediction of high_use
-
+```{r}
 alc_data <- mutate(alc_data, prediction = probability > 0.5)
-
+```
 
 see the last ten original classes, predicted probabilities, and class predictions
-
+```{r}
 select(alc_data, high_use, studytime, traveltime, age, freetime) %>% tail(10)
+```
 
-
-
+```{r}
 table(high_use = alc_data$high_use, prediction = alc_data$prediction)
+```
 
 high_use FALSE TRUE
    FALSE   256   12
    TRUE     96   18
 
 #10-fold cross-validation
-
+```{r}
 loss_func <- function(class, prob) {
   n_wrong <- abs(class - prob) > 0.5
   mean(n_wrong)
@@ -109,11 +112,11 @@ library.tidyr
 library(boot)
 cv <- cv.glm(data=alc_data, cost=loss_func, glmfit=m, K=10)
 cv$delta[1]
-
+```
 The datacamp model had [1] 0.2539267 as cv value while my model has a cv value of 0.2958115. The results showed that around 70% of the predictions are  correct, and 30% of the predictions are incorrect. The model is better than simple guessing strategy, where the odds of guessing correctly would be approximately 50% however my model has a larger prediction error than data camp's model.
 
 #Super-Bonus
-
+```{r}
 m2 <- glm(high_use ~ high_use + studytime + traveltime + age + freetime + health +famrel + G1 +G2 + G3, data = alc, family = "binomial")
 probabilities2 <- predict(m2, type = "response")
 alc_data2 <- select(alc,c("high_use","studytime","traveltime","age","freetime","health","famrel","G1","G2","G3"))
@@ -126,7 +129,7 @@ loss_func <- function(class, prob) {
 loss_func(class = alc_data2$high_use, prob = alc_data2$probability2)
 cv2 <- cv.glm(data = alc_data2, cost = loss_func, glmfit = m2, K = 10)
 cv2$delta[1]
-
+```
 
 After adding more variables to the model, the prediction error rose to over 31%. This leads me to believe that not enough variables were used to have a significant change in the model.
 
