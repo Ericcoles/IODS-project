@@ -104,6 +104,7 @@ high_use FALSE TRUE
    TRUE     96   18
 
 #10-fold cross-validation
+```{r}
 loss_func <- function(class, prob) {
   n_wrong <- abs(class - prob) > 0.5
   mean(n_wrong)
@@ -115,7 +116,7 @@ library.tidyr
 library(boot)
 cv <- cv.glm(data=alc_data, cost=loss_func, glmfit=m, K=10)
 cv$delta[1]
-
+```
 The datacamp model had [1] 0.2539267 as cv value while my model has a cv value of 0.2958115. The results showed that around 70% of the predictions are  correct, and 30% of the predictions are incorrect. The model is better than simple guessing strategy, where the odds of guessing correctly would be approximately 50% however my model has a larger prediction error than data camp's model.
 
 #Super-Bonus
@@ -134,5 +135,5 @@ cv2 <- cv.glm(data = alc_data2, cost = loss_func, glmfit = m2, K = 10)
 cv2$delta[1]
 ```
 
-After adding more variables to the model, the prediction error rose to over 31%. This leads me to believe that not enough variables were used to have a significant change.
+After adding more variables to the model, the prediction error rose to over 31%. This leads me to believe that not enough variables were used to have a significant change in the model.
 
