@@ -1,0 +1,299 @@
+---
+title: "Chapter4"
+output: html_document
+---
+# Access the required packages
+```{r}
+library(MASS)
+library(GGally)
+library(ggplot2)
+library(tidyr)
+library(corrplot)
+```
+
+# Loaded the Boston dataset
+```{r}
+data("Boston")
+```
+The Boston dataset shows housing values in suburbs of Boston with variables that are related to the value of housing such as per capita crime rate by town, the proportion of residential land zoned for lots over 25,000 sq.ft, the proportion of non-retail business acres per town, proportion of owner-occupied units built prior to 1940, full-value property-tax rate per \$10,000, pupil-teacher ratio by town, median value of owner-occupied homes in \$1000s.
+
+# Explored the Boston dataset
+```{r}
+str(Boston)
+dim(Boston)
+summary(Boston)
+```
+The Boston data frame has 506 rows and 14 columns.
+
+
+## Graphical Overview of the data.
+
+# calculate the correlation matrix and round it
+```{r}
+cor_matrix<-cor(Boston) 
+```
+
+
+# Visualized the correlation matrix
+The function corrplot function was used to can be used to visualize the correlations.
+```{r}
+corrplot(cor_matrix, method="circle")
+cor_matrix<-cor(Boston) %>% round(digits = 2)
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex = 0.6)
+```
+Positive correlations are displayed in blue and negative correlations in red color. Color intensity and the size of the circle are proportional to the correlation coefficients. In the right side of the correlogram, the legend color shows the correlation coefficients and the corresponding colors. The corrplot shows the correlations between variables of the Boston dataset. From the plot see that that rad (index of accessibility to radial highways) and tax (full-value property-tax rate per $10000) have the strongest positive correlation between the variables. 
+While dis (weighted mean of distances to five Boston employment centres) and nox (nitrogen oxides concentration), age (proportion of owner-occupied units built prior to 1940) and indux (proportion of non-retail business acres per town), medv (meidan value of owner-occupied homes in $1000) and lstat (lower status of the population) have very strong negative correlation.
+# Printed the correlation matrix
+```{r}
+cor_matrix
+```
+Summary of cor_matrix variables.
+
+
+```{r}
+# center and standardize variables
+boston_scaled <- scale(Boston)
+```
+
+```{r}
+# summaries of the scaled variables
+summary(boston_scaled)
+```
+After scaling the variables, the means of each variables have become very close to zero. Many of the minimum and maximum values for each variable have decreased.
+
+Next we place the variables into quantiles, to get high, med_low, med_high, and low rates of crime into their own categories
+```{r}
+# class of the boston_scaled object
+class(boston_scaled)
+
+# change the object to data frame
+boston_scaled<-as.data.frame(boston_scaled)
+
+# create a quantile vector of crim and print it
+bins <- quantile(boston_scaled$crim)
+
+bins
+```
+
+First, we use the quantiles; low, med_low, med_high, and high as the break points and create a categorical variable of the crime rate in the Boston dataset.
+```{r}
+# create a categorical variable 'crime'
+crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE, labels = c("low", "med_low", "med_high", "high"))
+
+# look at the table of the new factor crime
+table(crime)
+
+# summary of the scaled crime rate
+summary(crime)
+```
+
+
+Then the old crime rate variable is removed and then the dataset is divided into train and test so that 80% of the data belongs to the train set.
+
+```{r}
+# remove original crim from the dataset
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+
+# add the new categorical value to scaled data
+boston_scaled <- data.frame(boston_scaled, crime)
+# boston_scaled is available
+
+# number of rows in the Boston dataset 
+n <- nrow(boston_scaled)
+
+# choose randomly 80% of the rows
+ind <- sample(n,  size = n * 0.8)
+
+# create train set
+train <- boston_scaled[ind,]
+
+# create test set 
+test <- boston_scaled[-ind,]
+
+# save the correct classes from test data
+correct_classes <- test$crime
+
+# remove the crime variable from test data
+test <- dplyr::select(test, -crime)
+```
+
+##Linear discriminant analysis
+Linear Discriminant analysis is a classification method that finds the linear combination of the variables that separate the target variable classes. 
+ 
+Here I fit the linear discriminant analysis on the train set. Use the categorical crime rate as the target variable and all the other variables in the dataset as predictor variables. Drew the LDA (bi)plot.
+```{r}
+# linear discriminant analysis
+lda.fit <- lda(crime~., data = train)
+
+# print the lda.fit object
+lda.fit
+
+# the function for lda biplot arrows
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+```
+
+Next I saved the crime categories from the test set and then remove the categorical crime variable from the test dataset. Then I predicted the classes with the LDA model on the test data. I Cross tabulated the results with the crime categories from the test set. Commented on the results.
+```{r}
+# target classes as numeric
+classes <- as.numeric(train$crime)
+
+# plot the lda results
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 1)
+# lda.fit, correct_classes and test are available
+
+# predict classes with test data
+lda.pred <- predict(lda.fit, newdata = test)
+
+# cross tabulate the results
+table(correct = correct_classes, predicted = lda.pred$class)
+
+# lda.fit, correct_classes and test are available
+
+# predict classes with test data
+lda.pred <- predict(lda.fit, newdata = test)
+
+# cross tabulate the results
+table(correct = correct_classes, predicted = lda.pred$class) %>% addmargins
+# Percentage inaccuracy
+table(correct = correct_classes, predicted = lda.pred$class) %>% prop.table() %>% addmargins()
+loss_func <- function(class, prob) {
+  n_wrong <- class != prob
+  mean(n_wrong)
+}
+loss_func(class = correct_classes, prob = lda.pred$class)
+```
+From the cross table, it is shown that most of the predictions are correct and from the total proportion of inaccurately predicted individuals the prediction model is close to 31% incorrect, making the model close to 69% accurate. This is a relatively good model based on these results.
+
+
+
+Here I reloaded the Boston dataset and standardize the dataset (we did not do this in the Datacamp exercises, but you should scale the variables to get comparable distances). Calculated the distances between the observations. 
+```{r}
+# load MASS and Boston
+library(MASS)
+data('Boston')
+
+#scaled
+boston_scaled=scale(Boston)
+
+# euclidean distance matrix
+dist_eu <- dist(boston_scaled)
+
+# look at the summary of the distances
+summary(dist_eu)
+
+# manhattan distance matrix
+dist_man <- dist(boston_scaled, method = 'manhattan')
+
+# look at the summary of the distances
+summary(dist_man)
+summary(dist_eu)
+```
+Ran the k-means algorithm on the dataset. Investigated what is the optimal number of clusters and reran the algorithm again. Visualized the clusters (for example with the pairs() or ggpairs() functions, where the clusters are separated with colors) and interpret the results.
+```{r}
+# k-means clustering
+km <-kmeans(boston_scaled, centers = 3)
+
+# plot the Boston dataset with clusters
+pairs(boston_scaled, col = km$cluster)
+# MASS, ggplot2 and Boston dataset are available
+set.seed(123)
+
+# determine the number of clusters
+k_max <- 10
+
+# calculate the total within sum of squares
+twcss <- sapply(1:k_max, function(k){kmeans(Boston, k)$tot.withinss})
+
+# visualize the results
+qplot(x = 1:k_max, y = twcss, geom = 'line')
+
+# k-means clustering
+km <-kmeans(boston_scaled, centers = 2)
+
+# plot the Boston dataset with clusters
+pairs(boston_scaled, col = km$cluster)
+```
+The graph shows that 2 clusters are the optimal number of clusters. The total of within cluster sum of squares (WCSS) vs. the number of cluster changes is plotted. We can observe the clusters on the data and how they relate in combination for each variable. 
+
+#Bonus: 
+Perform k-means on the original Boston data with some reasonable number of clusters (> 2). Remember to standardize the dataset. Then perform LDA using the clusters as target classes. Include all the variables in the Boston data in the LDA model. Visualize the results with a biplot (include arrows representing the relationships of the original variables to the LDA solution). 
+```{r}
+library(MASS)
+data('Boston')
+
+#scaled
+boston_scaledx=scale(Boston)
+km2 <-kmeans(boston_scaledx, centers = 3)
+boston_scaledx <- as.data.frame(boston_scaledx)
+#LDA
+lda.fit2 <- lda(km2$cluster ~., data=boston_scaledx)
+
+#lda biplot 
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+
+# target classes as numeric
+classes <- as.numeric(km2$cluster)
+
+# plot the lda results
+plot(lda.fit2, dimen = 2, col=classes, pch= classes)
+lda.arrows(lda.fit, myscale = 1)
+```
+It appears that rad (index of accessibility to radial highways) is the most influencial linear separators for the clusters, as well as nox (nitrogen oxides concentration) and (zn) proportion of residential land zoned for lots over 25,000 sq.ft.
+#Super Bonus
+```{r}
+#First run the code below for the (scaled) train data that you used to fit the LDA. The code creates a matrix product, which is a projection of the data points.
+model_predictors <- dplyr::select(train, -crime)
+# check the dimensions
+dim(model_predictors)
+dim(lda.fit$scaling)
+# matrix multiplication
+matrix_product <- as.matrix(model_predictors) %*% lda.fit$scaling
+matrix_product <- as.data.frame(matrix_product)
+
+library(plotly)
+plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers')
+plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers', color = train$crime)
+```
+The first graphic is not that clear. There are two clusters we can identify which observations belong to which crime classes.
+
+In the second graphic we observe the graphic where there are 4 colors, one color for each cluster; green is low, med_low is orange, blue is med_high, pink is high. The optimal cluster number is 2 clusters. 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
