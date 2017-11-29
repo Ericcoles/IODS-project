@@ -1,0 +1,36 @@
+hd <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human_development.csv", stringsAsFactors = F)
+
+gii <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/gender_inequality.csv", stringsAsFactors = F, na.strings = "..")
+
+str(hd)
+dim(hd)
+summary(hd)
+
+str(gii)
+dim(gii)
+summary(gii)
+
+# Modify the column names of data
+colnames(hd) <- c("hdir", "cnty", "hdi", "life", "edu", "edu.mean", "gni", "gni")
+colnames(gii) <- c("giirnk", "cty", "gii", "mort.M", "t.birth", "Par.M", "edu2F", "edu2M", "labF", "labM")
+
+# Modify the column names of Human Development dataset and Gender inequality data
+column_names_hd=c('HDI.Rank','Country','HDI','Life.Exp','Edu.Exp','Edu.Mean','GNI','GNI.Minus.Rank')
+colnames(hd)=column_names_hd
+column_names_gii=c('GII.Rank','Country','GII','Mat.Mor','Ado.Birth','Parli.F','Edu2.F','Edu2.M','Labo.F','Labo.M')
+colnames(gii)=column_names_gii
+
+# Calculate the ratio of female and male populations with secondary education and labour force participation in each country
+gii=mutate(gii,Edu2.FM=Edu2.F/Edu2.M,Labo.FM=Labo.F/Labo.M)
+
+# Join the two datasets
+human=inner_join(hd,gii,by='Country')
+dim(human)
+summary(human)
+
+# Saving the analysis daatset, name it as human.txt, under the data folder
+# setwd("~/Documents/GitHub/IODS-project/data")
+write.table(create_human.R, file = "data/human.txt")
+write.csv(create_human, file = "create_human", row.names = FALSE) 
+# read the data and check for the validity
+create_human<- read.csv(file="create_human.R")
