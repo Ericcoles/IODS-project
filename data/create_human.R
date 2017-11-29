@@ -1,3 +1,9 @@
+
+#Created on 30.11.2017
+#Eric Coles
+#RStudio exercise 5 -- Data wrangling
+#Data source, United Nations Development Programme. 
+
 hd <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human_development.csv", stringsAsFactors = F)
 
 gii <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/gender_inequality.csv", stringsAsFactors = F, na.strings = "..")
@@ -30,7 +36,5 @@ summary(human)
 
 # Saving the analysis daatset, name it as human.txt, under the data folder
 # setwd("~/Documents/GitHub/IODS-project/data")
-write.table(create_human.R, file = "data/human.txt")
 write.csv(create_human, file = "create_human", row.names = FALSE) 
-# read the data and check for the validity
-create_human<- read.csv(file="create_human.R")
+
