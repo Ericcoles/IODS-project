@@ -1,7 +1,5 @@
----
-title: "Chapter4"
-output: html_document
----
+## "Chapter4"
+
 # Access the required packages
 ```{r}
 library(MASS)
@@ -118,6 +116,7 @@ test <- dplyr::select(test, -crime)
 ```
 
 ##Linear discriminant analysis
+
 Linear Discriminant analysis is a classification method that finds the linear combination of the variables that separate the target variable classes. 
  
 Here I fit the linear discriminant analysis on the train set. Use the categorical crime rate as the target variable and all the other variables in the dataset as predictor variables. Drew the LDA (bi)plot.
