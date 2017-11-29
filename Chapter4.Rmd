@@ -115,7 +115,7 @@ correct_classes <- test$crime
 test <- dplyr::select(test, -crime)
 ```
 
-##Linear discriminant analysis
+# Linear discriminant analysis
 
 Linear Discriminant analysis is a classification method that finds the linear combination of the variables that separate the target variable classes. 
  
