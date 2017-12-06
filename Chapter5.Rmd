@@ -1,7 +1,6 @@
----
-title: "Chapter5"
-output: html_document
----
+
+##Chapter 5: Dimensionality reduction techniques
+
 ```{r}
 human = read.table('/Users/eric/Documents/GitHub/IODS-project/data/human.txt',sep='\t',header = TRUE)
 
@@ -9,7 +8,10 @@ str(human)
 dim(human)
 ```
 The human data is from the UNITED NATIONS DEVELOPMENT PROGRAMME Human Development Reports 2016
+
 "The HDI(human development index) was created to show that people and their abilities should be the ultimate criteria for assessing the development of a country, not economic growth alone. The HDI has the potential to also be used to question national policy choices, asking how two countries with the same level of GNI per capita can end up with different human development outcomes."
+The data.frame has	155 obs. of  8 variables:
+
 # Accessed libraries
 ```{r}
 library(MASS)
@@ -18,7 +20,9 @@ library(tidyr)
 library(GGally)
 library(ggplot2)
 ```
+
 #Visualized human
+
 ```{r}
 ggpairs(human)
 
@@ -28,6 +32,7 @@ corrplot(cor_matrix,type='upper')
 From the scatter plot, it is seen that Edu.Exp and Life.Exp  have a strong postivie correlation (0.789) as well as Mat.Mor and Ado.Birth. While Life.Exp and Mat.Mor have a strong negative correlation(-0.857).
 
 In the corrplot Positive correlations are displayed in blue and negative correlations in red color. Color intensity and the size of the circle are proportional to the correlation coefficients. In the right side of the correlogram, the legend color shows the correlation coefficients and the corresponding colors. The corrplot shows the correlations between variables of the Boston dataset. The highest postive correlation can be seen between Life.Exp and Edu.Exp and the highest negative correlatiuon is seen between Life.Exp and Math.Mor
+
 #Perform Principal Component Analysis (PCA) non-standardized variables
 
 ```{r}
@@ -40,7 +45,9 @@ biplot(pca_human,choices=1:2,cex=c(0.8,1),xlab=pc_lab[1],ylab=pc_lab[2])
 ```
 With the non-standardized variables, it is difficult to read the bi-plot. The scales are extreme (-200000 and -0.4).
 PC1 is 100% and PC2 is 0%
+
 #Perform Principal Component Analysis (PCA) on standardized variables
+
 ```{r}
 human_std <- scale(human)
 pca_human=prcomp(human_std)
@@ -59,7 +66,7 @@ It is clearly show in the biplot that Mat.Mor and Ado.Birth have a positive rela
 
 While Palri.f and Labo.fm have have a negative relationship.
 
-
+#Loaded Libraries
 ```{r}
 library(FactoMineR)
 library(ggplot2) 
@@ -67,7 +74,7 @@ library(dplyr)
 library(tidyr)
 ```
 
-
+#Explored data set tea
 ```{r}
 data('tea')
 str(tea)
@@ -76,7 +83,7 @@ dim(tea)
 
 The data set tea contains 300 observations and 36 variables, many of them are factors.
 
-Create and visualized tea_time 
+#Created and visualized tea_time 
 ```{r}
 keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
 tea_time <- dplyr::select(tea, one_of(keep_columns))
@@ -93,7 +100,7 @@ In How, alone has the highest count.
 In tea, earl grey has the highest count.
 In how, tea bag has the highest count.
 
-Perform MCA on tea_time
+#Performed MCA on tea_time
 ```{r}
 mca=MCA(tea_time,graph=FALSE)
 summary(mca)
