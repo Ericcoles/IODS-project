@@ -1,6 +1,9 @@
 #R-studio exercise 3
 #Author: Coles, Eric
 #This data was wrangled from UCI machine learning depository.
+
+library(dplyr)
+
 url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets"
 
 # web address for math class data

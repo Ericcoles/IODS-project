@@ -2,145 +2,24 @@
 title: "Chapter5"
 output: html_document
 ---
-# read the human data
-human <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human1.txt", sep  =",", header = T)
+```{r}
+human = read.table('/Users/eric/Documents/GitHub/IODS-project/data/human.txt',sep='\t',header = TRUE)
 
-# look at the (column) names of human
-names(human)
-
-# look at the structure of human
 str(human)
-
-# print out summaries of the variables
-summary(human)
-
-# access the stringr package
-library(stringr)
-
-# look at the structure of the GNI column in 'human'
-str(human$GNI)
-
-# remove the commas from GNI and print out a numeric version of it
-str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric
-
-# human with modified GNI and dplyr are available
-
-# columns to keep
-keep <- c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
-
-# select the 'keep' columns
-human <- select(human, one_of(keep))
-
-# print out a completeness indicator of the 'human' data
-complete.cases(human)
-
-# print out the data along with a completeness indicator as the last column
-data.frame(human[-1], comp = complete.cases(human))
-
-# filter out all rows with NA values
-human_ <- filter(human, complete.cases(human))
-
-# human without NA is available
-
-# look at the last 10 observations
-tail(human, 10)
-
-# last indice we want to keep
-last <- nrow(human) - 7
-
-# choose everything until the last 7 observations
-human_ <- human[1:last, ]
-
-# add countries as rownames
-rownames(human) <- human$Country
-
-# modified human, dplyr and the corrplot functions are available
-
-library(dplyr)
-
-# remove the Country variable
-human_ <- dplyr::select(human, -Country)
-
+dim(human)
+The human data is from the UNITED NATIONS DEVELOPMENT PROGRAMME Human Development Reports 2016
+"The HDI(human development index) was created to show that people and their abilities should be the ultimate criteria for assessing the development of a country, not economic growth alone. The HDI has the potential to also be used to question national policy choices, asking how two countries with the same level of GNI per capita can end up with different human development outcomes."
 # Access GGally
+library(MASS)
+library(corrplot)
+library(tidyr)
 library(GGally)
-
-# visualize the 'human_' variables
-ggpairs(human_)
-
-# compute the correlation matrix and visualize it with corrplot
-cor(human_) %>% corrplot
-
-# modified human is available
-
-# standardize the variables
-human_std <- scale(human)
-
-# print out summaries of the standardized variables
-summary(human_std)
-
-# perform principal component analysis (with the SVD method)
-pca_human <- prcomp(human_std)
-
-# draw a biplot of the principal component representation and the original variables
-biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
-
-# pca_human, dplyr are available
-
-# create and print out a summary of pca_human
-s <- summary(pca_human)
-s
-
-# rounded percentages of variance captured by each PC
-pca_pr <- round(100*s$importance[2,], digits = 1) 
-
-# print out the percentages of variance
-pca_pr
-
-# create object pc_lab to be used as axis labels
-pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
-
-# draw a biplot
-biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
-
-# the tea dataset and packages FactoMineR, ggplot2, dplyr and tidyr are available
-
-# column names to keep in the dataset
-keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
-
-# select the 'keep_columns' to create a new dataset
-tea_time <- select(tea, one_of(keep_columns))
-
-# look at the summaries and structure of the data
-summary(tea_time)
-str(tea_time)
-
-# visualize the dataset
-gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
-
-
-
-
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
 ```
+ggpairs(human)
 
-## R Markdown
+cor_matrix=cor(human)
+corrplot(cor_matrix,type='upper')
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

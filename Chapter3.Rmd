@@ -44,7 +44,7 @@ Minimum value of freetime is 1.0, mean 3.22 and max 4.0.
 
 I graphically explored the varabiles;"high_use","studytime","traveltime","age","freetime"
 ```{r}
-alc_data <- select(alc,c("high_use","studytime","traveltime","age","freetime"))
+alc_data <- dplyr::select(alc,c("high_use","studytime","traveltime","age","freetime"))
 gather(alc_data) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
 ```
 
