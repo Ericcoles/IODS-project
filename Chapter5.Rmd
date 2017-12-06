@@ -7,19 +7,71 @@ human = read.table('/Users/eric/Documents/GitHub/IODS-project/data/human.txt',se
 
 str(human)
 dim(human)
+```
 The human data is from the UNITED NATIONS DEVELOPMENT PROGRAMME Human Development Reports 2016
 "The HDI(human development index) was created to show that people and their abilities should be the ultimate criteria for assessing the development of a country, not economic growth alone. The HDI has the potential to also be used to question national policy choices, asking how two countries with the same level of GNI per capita can end up with different human development outcomes."
 # Access GGally
+```{r}
 library(MASS)
 library(corrplot)
 library(tidyr)
 library(GGally)
 library(ggplot2)
 ```
+
+```{r}
 ggpairs(human)
 
 cor_matrix=cor(human)
 corrplot(cor_matrix,type='upper')
+```
+
+#Perform Principal Component Analysis (PCA) non-standardized variables
+
+```{r}
+pca_human <- prcomp(human)
+s <- summary(pca_human)
+s
+pca_pr=round(100*s$importance[2,],digits=1)
+pc_lab=paste0(names(pca_pr),'(',pca_pr,'%)')
+biplot(pca_human,choices=1:2,cex=c(0.8,1),xlab=pc_lab[1],ylab=pc_lab[2])
+```
+
+#Perform Principal Component Analysis (PCA) on standardized variables
+```{r}
+human_std <- scale(human)
+pca_human=prcomp(human_std)
+s=summary(pca_human)
+s
+pca_pr=round(100*s$importance[2,],digits=1)
+pc_lab=paste0(names(pca_pr),'(',pca_pr,'%)')
+biplot(pca_human,choices = 1:2,cex=c(0.8,1),xlab=pc_lab[1],ylab=pc_lab[2])
+```
+```{r}
+library(FactoMineR)
+library(ggplot2) 
+library(dplyr) 
+library(tidyr)
+```
 
 
+```{r}
+data('tea')
+str(tea)
+dim(tea)
+```
 
+```{r}
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+tea_time <- dplyr::select(tea, one_of(keep_columns))
+summary(tea_time)
+str(tea_time)
+
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+```
+
+```{r}
+mca=MCA(tea_time,graph=FALSE)
+summary(mca)
+plot(mca,invisible=c('ind'),habillage='quali')
+```
